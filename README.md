@@ -29,17 +29,16 @@
 
 # Design
 
- Block Diagram :- 
  ![URL_Lookiup_Design](https://user-images.githubusercontent.com/94652016/142744898-401bb599-aacd-42f8-bcb0-fc4550114f7e.png)
 
 
 # Load Balancer:
    
-   To load balance the HTTP Requests to the configured pool of Url Lookup services. This should help to handle the situation where the number of requests exceeds the capacity of the initial solution.    
+   To load balance the HTTP Requests to the configured pool of Url Lookup services. Based on the need, We can spin up more URL lookup service intances to handle the scale requirements. This should help to handle the situation where the number of requests exceeds the capacity of the initial solution.    
    
    The design will include master and standby loadbalancer for the High availablity.
    
-   I am planning to use HA Proxy Loadbalancer for load-balancing. Since the use case is to load balance the requests to the backend URL lookup web service, I prefer HAParoxy over Nginx.    
+   The plan is to use HA Proxy Loadbalancer for load-balancing. Since the use case is to load balance the requests to the backend URL lookup web service, I prefer HAParoxy over Nginx.    
     We can even have a rate limit feature enabled on the load balancer to handle the burst of requests that exceed over Loadbalancer's performance. 
    
    Performance Number:
@@ -101,12 +100,14 @@
              1. Bulk update :-  /urlupdate/1/bulk/{filename}
              2. Single Update :- /urlupdate/1/single/{hostname_and_port}/{original_path_and_query_string}
 
-     For Bulk update - we need to have a mount location configured to access the blocklist.txt file to read and load it into the DB. 
+     For Bulk update - Mount location should be configured to access the file to read and load it into the DB. 
   
    2. Timer based approach. The timer will run for the configured time (10min) to access the mount location to update the URL lists. 
 
    In the future, We can add the file integrity checks on the mounted file to make sure it is not corrupted. 
 
 
+# Setup Documentation 
 
+# Unit test
 
