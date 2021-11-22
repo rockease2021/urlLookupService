@@ -1,0 +1,27 @@
+version: '3'
+services:
+  urlapp1:
+    build:
+            dockerfile: Dockerfile_lookup
+    ports:
+            - 8090:8090
+    environment:
+            APP_PORT: "8090"
+  urlapp2:
+    build:
+            dockerfile: Dockerfile_lookup
+    ports:
+            - 8080:8080
+    environment:
+            APP_PORT: "8080"
+  redis:
+    image: redis
+    ports:
+            - 6379:6379
+  urlupdate:
+    build:
+            dockerfile: Dockerfile_updater
+    ports:
+            - 8091:8091
+    environment:
+            APP_PORT: "8091"

@@ -54,7 +54,7 @@
    Reason to Select FAST API:
        High performance with async support, can be compared with Golang.
        Easy to connect with redisDB
-       Easy to unit test with SwaggerUI support
+       Supports OpenAPI/SwaggerUI and JSON
    
               GET Request:-
                  GET /urlinfo/1/{hostname_and_port}/{original_path_and_query_string}
@@ -93,7 +93,7 @@
    
    As per the requirement, The URL update service should run for every 10mins to update the URLs. There are multiple ways to handle this requirement. I am proposing two methods. 
    
-   1. Create a URL Update web service that listens on the mentioned IP/Port for the URL request POST API. once it receives the request, based on the POST API structure, it will act on it. This can be a synchronous operation. so I am planning to use the Flask Web frame work to implement it. 
+   1. Create a URL Update web service that listens on the mentioned IP/Port for the URL request POST API. once it receives the request, based on the POST API structure, it will act on it. 
 
               POST API:
               
@@ -104,10 +104,13 @@
   
    2. Timer based approach. The timer will run for the configured time (10min) to access the mount location to update the URL lists. 
 
-   In the future, We can add the file integrity checks on the mounted file to make sure it is not corrupted. 
+   In the future, We can add the file integrity checks on the mounted file to make sure it is not corrupted.
+
+   3. Corn job -  To schedule a job for every 10min to run the python script. The script will follow the same model as #2 to load the url lists on RedisDB. 
 
 
 # Setup Documentation 
 
 # Unit test
 
+# Performance / Scale
