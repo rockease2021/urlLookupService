@@ -2,3 +2,7 @@ fastapi
 aredis
 uvicorn
 redis
+
+#development
+pytest
+requests

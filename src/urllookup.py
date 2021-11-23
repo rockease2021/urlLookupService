@@ -9,7 +9,7 @@ from aredis import StrictRedis
 import logging
 
 urlapp = FastAPI()
-logging.basicConfig(filename='urlapp.log', level=logging.DEBUG)
+logging.basicConfig(filename='urlapp.log', level=logging.ERROR)
 
 #For debugging
 total_req_count      = 0
@@ -80,6 +80,9 @@ async def urlInfoLookup(hostname_and_port, original_path_and_query_string):
     global total_req_count
     global malware_detected
     global malware_not_detected
+
+    # Enable for pytest until docker pytest developemnt is done
+    # urlapp.client = StrictRedis(host="0.0.0.0", port="6379", db=0)
 
     total_req_count += 1
     if not hostname_and_port or not original_path_and_query_string:
