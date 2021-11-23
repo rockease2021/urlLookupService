@@ -28,12 +28,12 @@ services:
     volumes:
             - "./blocklist.txt:/blocklist.txt"
   haproxy:
-          image: haproxy
-          ports:
-                  - 80:80
-          container_name: 'url_haproxy'
-          links:
-                  - urlapp1
-                  - urlapp2
-          volumes:
-                  - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
+    image: haproxy
+    ports:
+            - 80:80
+    container_name: 'url_haproxy'
+    links:
+            - urlapp1
+            - urlapp2
+    volumes:
+            - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
