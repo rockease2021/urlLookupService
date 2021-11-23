@@ -110,10 +110,29 @@
 
 
 # Setup Documentation 
+              
+              To launch a containers:
+              
+              sudo /usr/local/bin/docker-compose -f docker-compose.yaml up --build
+              
+              This will launch a two webservices, one HA proxy and one Redis DB for the testing.
+              Please change the IP addresses based on the environment
+              
+              To test:
+              
+              curl http://0.0.0.0:80/urlinfo/1/hostname_and_port/original_path_and_query_string
+              Ouput: 200 OK {"Cause":"MALWARE_DETECTED"}
+              
 
 # Unit test
+   Please find the attached screen shots in unittest folder. 
+   UT framework - 
+        I have used pytest to test the webservice. Still this needs to be improved to handle all the modules and corner cases.
 
 # Performance / Scale
+   HAProxy can support 2Millon Requests per second.
+   Redis can handle 100K lookups per second.
+   Web Proxy service - AWS EC2 (1GB RAM, 1vCPU) - 5K rps with the available test setup
 
 # API
 
