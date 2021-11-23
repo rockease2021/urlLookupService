@@ -87,7 +87,8 @@
    
    The plan is to write the URLs in the master DB and let it sync to all the others members in the cluster. This should help to separate out the datapath and control path (URL updater service).
    
-   In the future, We can introduce a local cache in each URL lookup proxy instance to speed up the lookup time. 
+   In the future, We can introduce a local cache in each URL lookup proxy instance to speed up the lookup time. May be a LRU cache. but we need to make sure data    is consistent across the DB and cache. 
+   If needed, We can implement a timeout based keys to retire the old values in the DB. 
    
 # URL Updater:
    
