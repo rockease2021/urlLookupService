@@ -83,7 +83,15 @@ async def urlUpdateSingleEntry(type, hostname_and_port, original_path_and_query_
         return {"Cause" : "Bad_Request"}
     if type == "single":
         key = hostname_and_port + "/" + original_path_and_query_string
-        if await urlapp.client.exists(key):
+        try:
+            found = await urlapp.client.exists(key)
+        except Exception as e:
+            logging.error(f"Exception : {e}")
+            return JSONResponse(
+                status_code=400,
+                content={"Cause": "DB_UNAVAILABLE"},
+            )        
+        if found:
             return {"Add" : "Key Exists"}
         else:
             await urlapp.client.set(key, 1)
@@ -105,10 +113,18 @@ async def urlInfoLookup(hostname_and_port, original_path_and_query_string):
     if not hostname_and_port or not original_path_and_query_string:
         return {"Cause" : "Bad_Request"}
 
-    found = 0
-    found = await urlapp.client.exists(hostname_and_port + "/" + original_path_and_query_string)
+    key = hostname_and_port + "/" + original_path_and_query_string
+
+    try:
+        found = await urlapp.client.exists(key)
+    except Exception as e:
+        logging.error(f"Exception : {e}")
+        return JSONResponse(
+            status_code=400,
+            content={"Cause": "DB_UNAVAILABLE"},
+        )
     if found:
-        logging.info("Malware found",hostname_and_port + "/" + original_path_and_query_string)
+        logging.info("Malware found", key)
         req_stats.add_malware_detected()
         return {"Cause": "MALWARE_DETECTED"}
     else:

@@ -8,7 +8,7 @@ from aredis import StrictRedis
 import logging
 
 urlupdate = FastAPI()
-logging.basicConfig(filename='urlupdate.log', level=logging.DEBUG)
+logging.basicConfig(filename='urlupdate.log', level=logging.ERROR)
 
 redis_ip     = os.getenv('DATABASE') if os.getenv('DATABASE') else "redis"
 redis_port   = os.getenv('REDIS_PORT') if os.getenv('REDIS_PORT') else "6379"
@@ -44,7 +44,15 @@ async def urlUpdateSingleEntry(type, hostname_and_port, original_path_and_query_
         return {"Cause" : "Bad_Request"}
     if type == "single":
         key = hostname_and_port + "/" + original_path_and_query_string
-        if await urlupdate.client.exists(key):
+        try:
+            found = await urlupdate.client.exists(key)
+        except Exception as e:
+            logging.error(f"Exception : {e}")
+            return JSONResponse(
+                status_code=400,
+                content={"Cause": "DB_UNAVAILABLE"},
+            )
+        if found:
             return {"Add" : "Key Exists"}
         else:
             await urlupdate.client.set(key, 1)
@@ -77,12 +85,21 @@ async def urlUpdateBulkEntry(file_path):
     else:
         for line in block_list_file:
             key = line.rstrip('\n')
-            if await urlupdate.client.exists(key):
+            try:
+                found = await urlupdate.client.exists(key)
+            except Exception as e:
+                logging.error(f"Exception : {e}")
+                return JSONResponse(
+                    status_code=400,
+                    content={"Cause": "DB_UNAVAILABLE"},
+                )  
+            if found:
                 logging.info(f"existing item: {key}")
             else:
                 await urlupdate.client.set(key, 1)
                 logging.info(f"new: {key}")
                 count += 1
+
         return {"Add": "BULK_ADD_SUCCESS"}
 
 if __name__ == "__main__":
