@@ -12,28 +12,23 @@ urlapp = FastAPI()
 logging.basicConfig(filename='urlapp.log', level=logging.ERROR)
 
 class stats(object):
-    total_req_count      = 0
-    malware_detected     = 0
-    malware_not_detected = 0
-    total_failed_req     = 0
-
     def __init__(self):
-        stats.total_req_count       = 0
-        stats.malware_detected      = 0
-        stats.malware_not_detected  = 0
-        stats.total_failed_req      = 0
+        self.total_req_count       = 0
+        self.malware_detected      = 0
+        self.malware_not_detected  = 0
+        self.total_failed_req      = 0
 
     def add_total_req_count(self):
-        stats.total_req_count +=1
+        self.total_req_count +=1
 
     def add_malware_detected(self):
-        stats.malware_detected +=1
+        self.malware_detected +=1
 
     def add_malware_not_detected(self):
-        stats.malware_not_detected +=1
+        self.malware_not_detected +=1
 
     def add_total_failed_req(self):
-        stats.total_failed_req += 1
+        self.total_failed_req += 1
 
 redis_ip     = os.getenv('DATABASE') if os.getenv('DATABASE') else "redis"
 redis_port   = os.getenv('REDIS_PORT') if os.getenv('REDIS_PORT') else "6379"
@@ -53,11 +48,11 @@ async def shutdown():
     #registerUrlUpdateTimer("0")
 
 
-@urlapp.get("/help")
+@urlapp.get("/urlinfo/help")
 def helper():
     return {"urllookup": "/urlinfo/1/{hostname_and_port}/{original_path_and_query_string}"}
 
-@urlapp.get("/stats")
+@urlapp.get("/urlinfo/stats")
 def urlappStats():
     logging.debug("Get Statistics")
     logging.info(f"Total reqs :{req_stats.total_req_count} Total Failed req: {req_stats.total_failed_req}"
